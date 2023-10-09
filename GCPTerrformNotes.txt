@@ -1,0 +1,231 @@
+Terraform 
+---------
+
+Traditional way of managing infrastructure 
+
+E-Commerce Application (Asp.NET Core, MS Sql Server, Windows Server + IIS)
+
+Dev -> QA -> Staging -> Production -> Disaster Recovery 
+
+An IT Admin will manually create the required infrastructure to run the application for each team
+
+Drawbacks 
+---------
+Repetitive Process
+Human Errors 
+Time Consuming 
+
+Infrastructure as Code 
+----------------------
+Infrastructure as Code (IaC) tools allows you to manage infrastructure with configuration files rather than through a GUI
+
+IaC has become an integral part of the modern software development, enabling teams to provision, configure and manage infrastructure resources programmatically 
+
+IaC allows you to build, change and manage infrastructure in a safe, consisent and repetable way by defining resource configuration that you can version,reuse and share 
+
+IaC tools uses declarative syntax to define the infrastructure config and create them 
+
+AWS - CloudFormation(JSON or YAML)
+Azure - ARM Templates (JSON), Azure Bicep(JSON like syntax)
+GCP - Deployment Manager(YAML)
+
+Imperative Approach 
+-------------------
+Python script for creating a GCP Compute Engine VM 
+
+Terraform 
+---------
+Terraform is a IaC tool developed by HashiCorp
+It lets you define resource and infrastructure in a human readable, declarative configuration file and manage your infrastructure lifecycle
+It provides following advantages over the manual process of infrastructure management 
+
+-Terraform can manage infrastructure on mulitple cloud platform 
+
+-The human-readable configuration languages help you write the infrastructure code quickly 
+
+	HashiCorp Configuration Language (HCL) - .tf files 
+	JSON - .tf.json file 
+	
+-Terraform's state allows you to track resource change throughout your deployment 
+
+-You can commit your configuration to version control system to safely collabrate on infrastructure
+
+HCL Use Block Syntax in the terrform configuration files which looks as follows 
+
+block_type "label" "name_label"
+{
+	key1="value1"
+	key2="value2"
+	
+	nested_block{
+		key="value"
+	}
+}
+
+#a block to create a VPC network in GCP 
+
+resource "google_compute_network" "vpc_network"{
+	name= "terrform-network"
+} 
+
+How to use Terraform to manage Infrastructure?
+---------------------------------------------
+Terraform Cloud :- It is cloud based solution to create configuration files. It is paid service
+
+Terraform CLI :- A standalone tool to manage infrastructure with clouds. It is free to use 
+
+For Windows, download the zip file and extract it into C drive 
+
+	C:\Terraform - Set the path in the enviornment variable 
+	
+	set path ="C:\Terraform"
+	
+	Editor - Visual Studio Code 
+	Extension - HashiCorp Terraform Extension 
+	
+
+
+Authentication 
+--------------
+Terraform in Google Cloud 
+	-Cloud Shell - has the lastest version of the Terraform CLI installed by default and no authentication keys are required for executing the scripts from the Cloud Shell 
+	
+Outside Google Cloud 
+	-Create a Service Account for the project where you need to manage the infrastructure
+	-Create and Download the access key which will be used by Terraform to authenticate and connect to your GCP Account 
+	
+	
+Creating a Simple Terrform Configuration for creating a VPC network 
+
+Terraform Workflow 
+------------------
+init->validate->plan->apply->destrory
+
+terraform init 
+--------------
+It is used to intialize a working directory containing terraform configuration file. It download the required provider binary in the working directory 
+
+terraform validate 
+------------------
+It is used to validare the terraform configuration file in the respective directory. It check the syntax and internal consitenancy of the file 
+
+terraform plan 
+--------------
+It is used to create a execution plan 
+It performs a refresh and determines what actions are necessary to achieve the desired state specified in the configuration file 
+
+terraform plan 
+
+terraform plan -out "plan1.tfplan"
+
+terraform apply 
+---------------
+It is used to apply the changes required to reach te desired state of the configuration file. By default apply scans the current dircetory for the configuration and applies the changes appropriately 
+
+	terraform apply --> enter yes on the prompt to apply the changes 
+	
+	terraform apply --auto-approve 
+	
+	terraform apply -auto-approve plan1.tfplan
+	
+terraform destroy 
+-----------------
+It is used to destroy the terrform managed infrastructure
+
+	terraform destroy --> enter yes on the prompt to apply the changes 
+	
+	terraform destroy --auto-approve
+Variables and Data Types 
+------------------------
+Variables 
+---------
+Input Variables 
+Output Variables
+Local Variables
+
+Input Variables - Serves as parameters for Terraform modules, so user can customize behaviour without editing source config file 
+
+The input variables can be created in the main.tf( file containing the actual config) or we can manage the variables in sperate file (variables.tf)
+
+variable "name_label"{
+
+	type = value #data type of variables 
+	description = value #describe the variables 
+	default = value #contains value to refered by the variable 
+	sensitive= true | false 
+}
+
+eg :- 
+
+variable "network-name"{
+	type=string 
+	description="VPC Network name"
+	default="terraform-network"
+}
+
+to refer the variable in the terraform configuration
+
+	var.<name_label>
+	
+resource "google_compute_network" "mynetwork"{
+
+	name = var.network-name
+}
+
+Terraform Variables Data type
+-----------------------------
+Primitive 
+	String 
+	Number 
+	Boolean 
+	
+Collection 
+	List 
+	Set 
+	Map
+	
+List 
+----
+[1,2,3,4] - valid list of numbers
+["us-central1","us-east1","us-west1"] - valid list of string 
+
+[1,"us-east1",true] - Invalid List 
+
+Map
+---
+images ={
+	image1="ubuntu 20.04"
+	image2="ubuntu 22.04"
+	image3="ubuntu 22.10"
+}
+
+var.images.image1 or var.images["image2"]
+
+.tfvars files :- helps us to provide values to the variables that we are using in the configuration file 
+
+By default, we can use the terraform.tfvars file to provide values for the all variables that we are using in the configuration file 
+
+Random Provider 
+---------------
+The random provider allows the use of randomness with Terraform configuration
+This is a local provider, which means that it will work entierly with the Terraform's logic and doesn't interact with any other services
+
+Output Variables :- It makes information about your infrastructure available on the command link and can expose information from other Terraform configuration to use 
+
+output "name_label"{
+	value = output_value
+	description ="description of ouput"
+	sensitive = true|false
+}
+
+output "mybucket"{
+	value =  google_storage.bucket.my-bucket.name
+}
+
+Local Variables or Values :- It provides a convenience way for assigning name to an expression
+
+	local{
+		prefix="ct"
+	}
+	
+	local.<name_label>
