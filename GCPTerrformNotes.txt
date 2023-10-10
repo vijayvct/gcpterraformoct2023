@@ -229,3 +229,56 @@ Local Variables or Values :- It provides a convenience way for assigning name to
 	}
 	
 	local.<name_label>
+	
+Remote State 
+------------
+
+State 
+-----
+Terraform uses state which stores the information about the managed infrastructure and configuration
+This state is used by terraform to map real world resources to your configuration, keep track of metadata to improve performance of the large infrastructure
+
+This state is store by default in a local file name terraform.tfstate
+
+When you are working in a team, the state file can be store in remote backend to avoid any inconsistency in the state
+
+The state file can be stored in the following locations
+	-Terraform Cloud 
+	-Amazon S3
+	-Azure Blob Storage 
+	-Google Cloud Storage 
+	-Alibaba Cloud 
+	-Oracle Cloud 
+	
+Modules 
+-------
+Modules are self-contained package of Terraform configuration that are manged by a group 
+It provide with pre-build configuration files using which we can create the required infrastructure without writing the whole configuration code from scratch 
+
+Virtual Machine (Compute Engine Instance)
+	-Source Image
+	-Disk or Storage 
+	-VPC
+	-IP Address 
+	-CPU and Memory 
+	
+	
+Built-In Module 
+Custom Module 
+
+	Custom Module for creating VPC Network, Subnet and VM 
+	
+	Root Module 
+		main.tf
+		variables.tf
+		output.tf 
+		
+			VPC 
+				main.tf
+				variables.tf
+				output.tf
+			
+			VM
+				main.tf
+				variables.tf
+				output.tf
