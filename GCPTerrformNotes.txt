@@ -282,3 +282,45 @@ Custom Module
 				main.tf
 				variables.tf
 				output.tf
+
+Terraform Provisioner
+---------------------
+Terraform Provisioners are used for executing scripts or shell commands on a local or remote machine as a part of resource creation or deletion 
+
+provisioner "local-exec"{
+	
+}
+
+local-exec :- it help to execute commands on the local system
+
+remote-exec :- it helps to execute commands on a remote system 
+
+
+
+Terraform CLI - Open Source version 
+
+	Terraform.exe 
+	
+Terraform Enterprise 
+
+Terraform Cloud 
+---------------
+Terraform Cloud is an application that helps team use Terraform to provision infrastructure
+
+It manages Terraform runs in a consistent and reliable enviornment and include easy access to shared state and secret data , access control for approving changes to infrastructure, a private registry for sharing Terraform modules, detailed policy control for governing the content of Terraform Configuration and more 
+
+Terraform Cloud is available at https://app.terraform.io
+
+Workflows 
+---------
+In Terraform Cloud, your resource are organized by workspace which contains your resource definition, enviornment, input variables and state files 
+
+A Terraform operation occurs with in a workspace and Terraform uses the configuration and state for that workspace to modify the infrastructure
+
+3 Workflows 
+
+The CLI driven workflow which uses Terraform standard CLI tools to executes runs in Terraform Cloud 
+
+The Version Control System (VCS) driven workflow, in which changes pushed to version control repositories trigger run in the associated workspace 
+
+The API-driven workflow which allows you to create tooling to interact with Terraform Cloud API programmatically
